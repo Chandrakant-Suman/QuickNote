@@ -10,28 +10,16 @@ import rateLimiter from "./middleware/rateLimiter.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
 // middleware
-if (process.env.NODE_ENV !== "production") {
-  app.use(
-    cors({
-      origin: "http://localhost:5173",
-    })
-  );
-}
-app.use(express.json()); // this middleware will parse JSON bodies: req.body
+app.use(cors()); // let Vercel handle domains, no need for localhost check
+app.use(express.json());
 app.use(rateLimiter);
-
-// our simple custom middleware
-// app.use((req, res, next) => {
-//   console.log(`Req method is ${req.method} & Req URL is ${req.url}`);
-//   next();
-// });
 
 app.use("/api/notes", notesRoutes);
 
+// Serve frontend in production (optional, if you’re also deploying frontend on Vercel, you may remove this block)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
@@ -40,8 +28,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("Server started on PORT:", PORT);
-  });
-});
+// ✅ Connect DB before export
+await connectDB();
+
+// 🚀 Instead of app.listen(), just export app
+export default app;
