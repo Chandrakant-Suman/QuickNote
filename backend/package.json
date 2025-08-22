@@ -4,14 +4,13 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "build": "[my-framework] build --output public"
+    "start": "node src/server.js"
   },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Express backend for QuickNote",
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.9",
